@@ -104,6 +104,11 @@
                         <goals>
                             <goal>deploy</goal>
                         </goals>
+                        <configuration>
+                            <serverId>nexus</serverId>
+                            <nexusUrl>http://localhost:8081/nexus/</nexusUrl>
+                            <skipStaging>true</skipStaging>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
