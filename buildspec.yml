@@ -1,0 +1,39 @@
+version: 0.2
+env:
+  variables:
+    GITHUB_OWNER: MarioHNogueira
+    GITHUB_REPO: nfse-persistence
+  secrets-manager:
+    GITHUB_TOKEN: "github/codebuild:token"
+    S3_PASSWORD: "s3/codebuild:password"
+phases:
+  install:
+    runtime-versions:
+      java: corretto25
+    commands:
+      - cp ./settings.xml /root/.m2/settings.xml
+      - git --version
+      - mvn -version
+  pre_build:
+    commands:
+      - git config --global user.name "build"
+      - git config --global user.email "build@clueit.com.br"
+      - echo "OWNER=${GITHUB_OWNER}"
+      - echo "REPO=${GITHUB_REPO}"
+      - test -n "$GITHUB_TOKEN" && echo "TOKEN_PRESENT=yes" || echo "TOKEN_PRESENT=no"
+      - GITHUB_TOKEN="$(printf '%s' "$GITHUB_TOKEN" | tr -d '\r\n')"
+      - git config --global credential.helper store
+      - printf "https://x-access-token:%s@github.com\n" "$GITHUB_TOKEN" > ~/.git-credentials
+      - chmod 600 ~/.git-credentials
+      - git ls-remote "https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}.git"
+      - git reset --hard HEAD
+      - git clean -fd
+      - mvn -B release:clean
+  build:
+    commands:
+      - mvn -B release:prepare
+      - mvn -B release:perform
+    post_build:
+      commands:
+        - git config --global --unset-all url."https://x-access-token:${GITHUB_TOKEN}@github.com/".insteadOf || true
+        - rm -f ~/.git-credentials
