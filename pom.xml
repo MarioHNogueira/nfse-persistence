@@ -30,7 +30,6 @@
         <url>https://github.com/MarioHNogueira/nfse-persistence</url>
         <connection>scm:git:https://github.com/MarioHNogueira/nfse-persistence.git</connection>
         <developerConnection>scm:git:https://github.com/MarioHNogueira/nfse-persistence.git</developerConnection>
-        <tag>v1.76</tag>
     </scm>
 
     <dependencyManagement>
