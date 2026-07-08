@@ -10,13 +10,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "nota_fiscal")
+@Table(name = "nota_fiscal", uniqueConstraints =
+        // Deduplicação por (tenant, codigo_cliente). Declarada também na migration V1; aqui é
+        // inerte em produção (schema-management = none) e vale para o schema gerado nos testes.
+        @UniqueConstraint(name = "uk_nota_dedup", columnNames = {"tenant_id", "codigo_cliente"}))
 public class NotaFiscalEntity extends PanacheEntityBase {
 
     @Id
@@ -64,7 +68,9 @@ public class NotaFiscalEntity extends PanacheEntityBase {
     public String tomadorDocumento;
 
     // Coluna JSON do MySQL; a String (JSON válido) é parseada pelo banco.
-    @Column(name = "payload_json")
+    // Payload JSON completo da requisição; TEXT na migration. length grande p/ o schema gerado
+    // (testes) refletir isso — inerte em produção (schema-management = none).
+    @Column(name = "payload_json", length = 100_000)
     public String payloadJson;
 
     @Column(name = "data_cancelamento")
