@@ -78,4 +78,29 @@ public class NotaFiscalEntity extends PanacheEntityBase {
 
     @Column(name = "motivo_cancelamento")
     public String motivoCancelamento;
+
+    // --- Versão 2 do contrato (reforma tributária LC 214/2025: CBS/IBS). Nulos em notas v1. ---
+
+    /** Versão do contrato de ingestão (1 = ISS clássico; 2 = com CBS/IBS). */
+    @Column(name = "versao")
+    public Integer versao;
+
+    /** Código de classificação tributária (cClassTrib) — obrigatório na v2. */
+    @Column(name = "cclass_trib")
+    public String cclassTrib;
+
+    @Column(name = "aliquota_cbs", precision = 7, scale = 4)
+    public BigDecimal aliquotaCbs;
+
+    @Column(name = "valor_cbs", precision = 15, scale = 2)
+    public BigDecimal valorCbs;
+
+    @Column(name = "aliquota_ibs_uf", precision = 7, scale = 4)
+    public BigDecimal aliquotaIbsUf;
+
+    @Column(name = "aliquota_ibs_mun", precision = 7, scale = 4)
+    public BigDecimal aliquotaIbsMun;
+
+    @Column(name = "valor_ibs", precision = 15, scale = 2)
+    public BigDecimal valorIbs;
 }
