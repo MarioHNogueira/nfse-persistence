@@ -103,4 +103,18 @@ public class NotaFiscalEntity extends PanacheEntityBase {
 
     @Column(name = "valor_ibs", precision = 15, scale = 2)
     public BigDecimal valorIbs;
+
+    // --- Emissor Nacional (Sefin Nacional NFS-e). Nulos em notas SP. ---
+
+    /** Modalidade de emissão: SP (default) ou NACIONAL. */
+    @Column(name = "modalidade")
+    public String modalidade;
+
+    /** Tipo de emissão nacional: NORMAL ou DECISAO_JUDICIAL. */
+    @Column(name = "tipo_emissao")
+    public String tipoEmissao;
+
+    /** Id/chave de acesso da NFS-e nacional (até 53 posições). */
+    @Column(name = "chave_acesso", length = 53)
+    public String chaveAcesso;
 }

@@ -49,4 +49,14 @@ public class TenantEntity extends PanacheEntityBase {
     public static TenantEntity buscarPorCnpj(String cnpj) {
         return find("cnpj", cnpj).firstResult();
     }
+
+    // --- Emissor Nacional ---
+
+    /** Modalidade de emissão do tenant: SP (default) ou NACIONAL. */
+    @Column(name = "modalidade_emissao")
+    public String modalidadeEmissao;
+
+    /** Tipo de emissão quando NACIONAL: NORMAL ou DECISAO_JUDICIAL. */
+    @Column(name = "tipo_emissao_nacional")
+    public String tipoEmissaoNacional;
 }
