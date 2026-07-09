@@ -37,6 +37,20 @@ public class NotaFiscalEntity extends PanacheEntityBase {
     @Column(name = "codigo_cliente_original")
     public String codigoClienteOriginal;
 
+    /**
+     * Libera a chave de deduplicação para reemissão: move {@code codigo_cliente} para
+     * {@code codigo_cliente_original} e zera o campo — a ingestão volta a aceitar outra nota
+     * com o mesmo codigoCliente ({@code uk_nota_dedup} permite N nulos). Chamar apenas em
+     * desfechos DEFINITIVOS (erro de geração, rejeição pelo WS/Sefin, nota cancelada) — nunca
+     * em falha de transporte, em que a prefeitura pode ter processado o envio.
+     */
+    public void liberarCodigoCliente() {
+        if (codigoCliente != null) {
+            codigoClienteOriginal = codigoCliente;
+            codigoCliente = null;
+        }
+    }
+
     @Column(name = "status")
     public String status;
 
